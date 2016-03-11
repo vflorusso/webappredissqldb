@@ -1,0 +1,176 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "baseName": {
+            "type": "string",
+            "metadata": {
+                "description": "Used to create unique names"
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "The location where the web apps will be deployed."
+            }
+        }
+    },
+    "variables": {
+        "location": "[parameters('location')]",
+        "serverFarmName": "[concat(parameters('baseName'), '-farm')]",
+        "adminAppName": "[concat(parameters('baseName')]",
+        "apiAppName": "[concat(parameters('baseName'), '-api')]",
+        "a0AppName": "[concat(parameters('baseName'), '-default')]",
+        "a1AppName": "[concat(parameters('baseName'), '-enterprise')]",
+        "a2AppName": "[concat(parameters('baseName'), '-citycouncil')]"
+    },
+    "resources": [
+        {
+            "name": "[variables('serverFarmName')]",
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2015-08-01",
+            "location": "[variables('location')]",
+            "sku": {
+                "name": "B1",
+                "tier": "Basic",
+                "capacity": 1
+            },
+            "properties": {}
+        },
+        {
+            "name": "[variables('adminAppName')]",
+            "type": "Microsoft.Web/sites",
+            "location": "[variables('location')]",
+            "apiVersion": "2015-08-01",
+            "dependsOn": [
+                "[concat('Microsoft.Web/serverfarms/', variables('serverFarmName'))]"
+            ],
+            "properties": {
+                "name": "[variables('adminAppName')]",
+                "serverFarmId": "[variables('serverFarmName')]",
+                "siteConfig": {
+                    "use32BitWorkerProcess": false,
+                    "alwaysOn": false,
+                    "webSocketsEnabled": false,
+                    "netFrameworkVersion": "v4.0",
+                    "phpVersion": "off",
+                    "pythonVersion": "",
+                    "appSettings": [
+                        {}
+                    ],
+                    "connectionStrings": [
+                        {}
+                    ]
+                }
+            }
+        },
+        {
+            "name": "[variables('apiAppName')]",
+            "type": "Microsoft.Web/sites",
+            "location": "[variables('location')]",
+            "apiVersion": "2015-08-01",
+            "dependsOn": [
+                "[concat('Microsoft.Web/serverfarms/', variables('serverFarmName'))]"
+            ],
+            "properties": {
+                "name": "[variables('apiAppName')]",
+                "serverFarmId": "[variables('serverFarmName')]",
+                "siteConfig": {
+                    "use32BitWorkerProcess": false,
+                    "alwaysOn": false,
+                    "webSocketsEnabled": false,
+                    "netFrameworkVersion": "v4.0",
+                    "phpVersion": "off",
+                    "pythonVersion": "",
+                    "appSettings": [
+                        {}
+                    ],
+                    "connectionStrings": [
+                        {}
+                    ]
+                }
+            }
+        },
+        {
+            "name": "[variables('a0AppName')]",
+            "type": "Microsoft.Web/sites",
+            "location": "[variables('location')]",
+            "apiVersion": "2015-08-01",
+            "dependsOn": [
+                "[concat('Microsoft.Web/serverfarms/', variables('serverFarmName'))]"
+            ],
+            "properties": {
+                "name": "[variables('a0AppName')]",
+                "serverFarmId": "[variables('serverFarmName')]",
+                "siteConfig": {
+                    "use32BitWorkerProcess": false,
+                    "alwaysOn": false,
+                    "webSocketsEnabled": false,
+                    "netFrameworkVersion": "v4.0",
+                    "phpVersion": "off",
+                    "pythonVersion": "",
+                    "appSettings": [
+                        {}
+                    ],
+                    "connectionStrings": [
+                        {}
+                    ]
+                }
+            }
+        },
+        {
+            "name": "[variables('a1AppName')]",
+            "type": "Microsoft.Web/sites",
+            "location": "[variables('location')]",
+            "apiVersion": "2015-08-01",
+            "dependsOn": [
+                "[concat('Microsoft.Web/serverfarms/', variables('serverFarmName'))]"
+            ],
+            "properties": {
+                "name": "[variables('a1AppName')]",
+                "serverFarmId": "[variables('serverFarmName')]",
+                "siteConfig": {
+                    "use32BitWorkerProcess": false,
+                    "alwaysOn": false,
+                    "webSocketsEnabled": false,
+                    "netFrameworkVersion": "v4.0",
+                    "phpVersion": "off",
+                    "pythonVersion": "",
+                    "appSettings": [
+                        {}
+                    ],
+                    "connectionStrings": [
+                        {}
+                    ]
+                }
+            }
+        },
+        {
+            "name": "[variables('a2AppName')]",
+            "type": "Microsoft.Web/sites",
+            "location": "[variables('location')]",
+            "apiVersion": "2015-08-01",
+            "dependsOn": [
+                "[concat('Microsoft.Web/serverfarms/', variables('serverFarmName'))]"
+            ],
+            "properties": {
+                "name": "[variables('a2AppName')]",
+                "serverFarmId": "[variables('serverFarmName')]",
+                "siteConfig": {
+                    "use32BitWorkerProcess": false,
+                    "alwaysOn": false,
+                    "webSocketsEnabled": false,
+                    "netFrameworkVersion": "v4.0",
+                    "phpVersion": "off",
+                    "pythonVersion": "",
+                    "appSettings": [
+                        {}
+                    ],
+                    "connectionStrings": [
+                        {}
+                    ]
+                }
+            }
+        }
+    ]
+}

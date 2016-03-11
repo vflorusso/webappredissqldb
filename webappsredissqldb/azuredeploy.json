@@ -1,0 +1,127 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"tenantName": {
+			"type": "string",
+			"minLength": 3,
+			"maxLength": 6,
+			"metadata": {
+				"description": "Name of the Tenant (3 to 6 chars)"
+			}
+		},
+		"sqldbUserName": {
+			"type": "string",
+			"minLength": 3,
+			"maxLength": 6,
+			"metadata": {
+				"description": "UserName for sqldb"
+			}
+		},
+		"sqldbPassword": {
+			"type": "string",
+			"minLength": 3,
+			"maxLength": 6,
+			"metadata": {
+				"description": "Password for sqldb"
+			}
+		},
+		"location": {
+			"type": "string",
+			"defaultValue": "West Europe",
+			"metadata": {
+				"description": "The location where resources will be deployed."
+			},
+			"allowedValues": [
+				"West US",
+				"East US",
+				"Southeast Asia",
+				"East Asia",
+				"West Europe",
+                "North Europe"
+			]
+		}
+	},
+	"variables": {
+		"cdnApiVersion": "2015-06-01",
+		"tenantName": "[parameters('tenantName')]",
+		"appServicesTemplateUrl": "[uri(deployment().properties.templateLink.uri, 'azuredeploy-appservice.json')]",
+		"redisTemplateUrl": "[uri(deployment().properties.templateLink.uri, 'azuredeploy-redis.json')]",
+		"sqldbTemplateUrl": "[uri(deployment().properties.templateLink.uri, 'azuredeploy-sqldb.json')]",
+		"sqlDBAdminUsername": "[parameters('sqldbUserName')]",
+		"sqlDBAdminPassword": "[parameters('sqldbPassword')]",
+		"location": "[parameters('location')]" 
+	},
+	"resources": [
+		{
+			"name": "appservice-resource",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2015-01-01",
+			"dependson": [
+			],
+			"properties": {
+				"mode": "Incremental",
+				"templateLink": {
+					"uri": "[variables('appServicesTemplateUrl')]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"baseName": {
+						"value": "[variables('tenantName')]"
+					},
+					"location": {
+						"value": "[variables('location')]"
+					}
+				}
+			}
+		},
+		{
+			"name": "sqldb-resource",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2015-01-01",
+			"dependson": [
+			],
+			"properties": {
+				"mode": "Incremental",
+				"templateLink": {
+					"uri": "[variables('sqldbTemplateUrl')]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"serverName": {
+						"value": "[concat(variables('tenantName'),'srv')]"
+					},
+					"serverLocation": {
+						"value": "[variables('location')]"
+					},
+                    "administratorLogin": {"value": "[parameters('sqldbUserName')]"},
+                    "administratorLoginPassword": {"value": "[parameters('sqldbPassword')]"},
+                    "databaseName":{"value": "[concat(variables('tenantName'),'db')]"}
+				}
+			}
+		},
+		{
+			"name": "redis-resource",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2015-01-01",
+			"dependson": [
+			],
+			"properties": {
+				"mode": "Incremental",
+				"templateLink": {
+					"uri": "[variables('redisTemplateUrl')]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"redisCacheName": {
+						"value": "[concat(variables('tenantName'),'cache')]"
+					},
+					"location": {
+						"value": "[variables('location')]"
+					}
+				}
+			}
+		}
+        
+	]
+}
