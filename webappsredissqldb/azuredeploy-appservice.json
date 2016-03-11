@@ -18,7 +18,7 @@
     "variables": {
         "location": "[parameters('location')]",
         "serverFarmName": "[concat(parameters('baseName'), '-farm')]",
-        "adminAppName": "[concat(parameters('baseName'))]",
+        "adminAppName": "[parameters('baseName')]",
         "apiAppName": "[concat(parameters('baseName'), '-api')]",
         "a0AppName": "[concat(parameters('baseName'), '-default')]",
         "a1AppName": "[concat(parameters('baseName'), '-enterprise')]",
